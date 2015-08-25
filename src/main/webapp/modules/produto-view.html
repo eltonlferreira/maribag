@@ -1,0 +1,22 @@
+<meta charset="utf-8" />
+<table class="table produtotable">
+    <tr>
+        <td><h3>{{produto.nome}}</h3></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Quantidade</td>
+        <td>{{produto.quantidade}}</td>
+    </tr>
+    <tr>
+        <td>Preço</td>
+        <td>{{produto.valor}}</td>
+    </tr>
+    <tr>
+        <td>Grupo</td>
+        <td>{{produto.grupo.nome}}</td>
+    </tr>
+</table>
+<div>
+    <a class="btn btn-primary" ui-sref="editProduto({id:produto.id})">Alterar</a>
+</div>
