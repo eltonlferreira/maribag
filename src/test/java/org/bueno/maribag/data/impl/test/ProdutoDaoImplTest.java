@@ -5,8 +5,9 @@ import java.util.List;
 
 import javax.ejb.EJB;
 
-import org.bueno.maribag.data.impl.GrupoDaoImpl;
-import org.bueno.maribag.data.impl.ProdutoDaoImpl;
+import org.bueno.maribag.dao.GrupoDaoLocal;
+import org.bueno.maribag.dao.ProdutoDaoLocal;
+import org.bueno.maribag.exception.DaoException;
 import org.bueno.maribag.model.Grupo;
 import org.bueno.maribag.model.Produto;
 import org.eu.ingwar.tools.arquillian.extension.suite.annotations.ArquillianSuiteDeployment;
@@ -14,7 +15,6 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
@@ -31,18 +31,18 @@ public class ProdutoDaoImplTest {
 	public static Archive<?> createTestArchive() {
 		return ShrinkWrap.create(WebArchive.class, "test.war").addPackages(true, "org.bueno.maribag")
 				.addAsResource("META-INF/test-persistence.xml", "META-INF/persistence.xml")
-				.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+				.addAsResource("META-INF/beans.xml", "META-INF/beans.xml")
 				// Deploy our test datasource
 				.addAsWebInfResource("test-ds.xml");
 	}
 
 	@EJB
-	private ProdutoDaoImpl produtoDao;
+	private ProdutoDaoLocal produtoDao;
 	@EJB
-	private GrupoDaoImpl grupoDao;
+	private GrupoDaoLocal grupoDao;
 
 	@Test
-	public void testASaveGrupo() {
+	public void testASaveGrupo() throws DaoException {
 		Grupo grupo = new Grupo();
 		grupo.setNome(Constants.PRIMEIRO_NOME_GRUPO);
 		Assert.assertNull("Deve ser nulo o ID", grupo.getId());
@@ -53,7 +53,7 @@ public class ProdutoDaoImplTest {
 	}
 
 	@Test
-	public void testBSaveProduto() {
+	public void testBSaveProduto() throws DaoException {
 		Produto produto = new Produto();
 		produto.setNome(Constants.PRIMEIRO_NOME_PRODUTO);
 		produto.setQuantidade(BigDecimal.ONE);
@@ -71,7 +71,7 @@ public class ProdutoDaoImplTest {
 	}
 
 	@Test
-	public void testCEditProduto() {
+	public void testCEditProduto() throws DaoException {
 		final String NOME_PRODUTO_ALTERNATIVO = "Produto2";
 
 		Produto produto = produtoDao.findProdutoByNome(Constants.PRIMEIRO_NOME_PRODUTO);
@@ -100,13 +100,13 @@ public class ProdutoDaoImplTest {
 	}
 
 	@Test
-	public void testCFindProdutoByNome() {
+	public void testCFindProdutoByNome() throws DaoException {
 		Assert.assertNotNull("Produto recuperado não pode ser nulo.",
 				produtoDao.findProdutoByNome(Constants.PRIMEIRO_NOME_PRODUTO));
 	}
 
 	@Test
-	public void testCFind() {
+	public void testCFind() throws DaoException {
 		Produto produto = produtoDao.findProdutoByNome(Constants.PRIMEIRO_NOME_PRODUTO);
 		Assert.assertNotNull("Produto recuperado não pode ser nulo.", produtoDao.find(produto.getId()));
 	}
@@ -120,7 +120,7 @@ public class ProdutoDaoImplTest {
 	}
 
 	@Test
-	public void testZDelete() {
+	public void testZDelete() throws DaoException {
 		Produto produto = produtoDao.findProdutoByNome(Constants.PRIMEIRO_NOME_PRODUTO);
 		Assert.assertNotNull("Produto não pode ser nulo.", produto);
 

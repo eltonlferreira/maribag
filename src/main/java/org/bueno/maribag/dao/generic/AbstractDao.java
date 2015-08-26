@@ -1,4 +1,4 @@
-package org.bueno.maribag.data;
+package org.bueno.maribag.dao.generic;
 
 import java.util.List;
 
@@ -6,14 +6,32 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 
-public abstract class AbstractDao<T> {
+/**
+ * Classe Abstrata implementa o interface do DAO generico
+ * 
+ * @author Bueno
+ *
+ * @param <T>
+ */
+public abstract class AbstractDao<T> implements DaoLocal<T> {
 
 	private final Class<T> entityClass;
 
+	/**
+	 * Construtor utilizado para injetar a classe do DAO
+	 * 
+	 * @param entityClass
+	 *            Classe utilizada nos metodos.
+	 */
 	public AbstractDao(Class<T> entityClass) {
 		this.entityClass = entityClass;
 	}
 
+	/**
+	 * Método abstrato para ser implementado por cada DAO concreto.
+	 * 
+	 * @return EntityManager para controle de entidade JPA
+	 */
 	protected abstract EntityManager getEntityManager();
 
 	protected void insert(T entity) {
@@ -24,14 +42,29 @@ public abstract class AbstractDao<T> {
 		getEntityManager().merge(entity);
 	}
 
+	@Override
+	public abstract void save(T entity);
+
+	/**
+	 * @see org.bueno.maribag.dao.generic.Dao#delete(T)
+	 */
+	@Override
 	public void delete(T entity) {
 		getEntityManager().remove(getEntityManager().merge(entity));
 	}
 
+	/**
+	 * @see org.bueno.maribag.dao.generic.Dao#find(java.lang.Object)
+	 */
+	@Override
 	public T find(Object id) {
 		return getEntityManager().find(entityClass, id);
 	}
 
+	/**
+	 * @see org.bueno.maribag.dao.generic.Dao#findAll()
+	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<T> findAll() {
 		CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
@@ -39,6 +72,10 @@ public abstract class AbstractDao<T> {
 		return getEntityManager().createQuery(cq).getResultList();
 	}
 
+	/**
+	 * @see org.bueno.maribag.dao.generic.Dao#findRange(int[])
+	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<T> findRange(int[] range) {
 		final CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
@@ -49,6 +86,10 @@ public abstract class AbstractDao<T> {
 		return q.getResultList();
 	}
 
+	/**
+	 * @see org.bueno.maribag.dao.generic.Dao#count()
+	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public int count() {
 		final CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();

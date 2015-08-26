@@ -27,7 +27,6 @@ angular.module('mainApp.controllers', []).controller('ProdutoListController',
 			}
 
 			$scope.markProduto = function(produto) {
-				produto.marcado = !(produto.marcado);
 				produto.$update(function() {
 					$state.go('produtos');
 				});

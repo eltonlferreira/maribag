@@ -1,4 +1,4 @@
-package org.bueno.maribag.data.impl;
+package org.bueno.maribag.dao.impl;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -7,13 +7,21 @@ import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import org.bueno.maribag.data.AbstractDao;
+import org.bueno.maribag.dao.ProdutoDaoLocal;
+import org.bueno.maribag.dao.generic.AbstractDao;
+import org.bueno.maribag.exception.DaoException;
 import org.bueno.maribag.model.Produto;
 
+/**
+ * EJB que implementa o DAO de Produtos
+ * 
+ * @author Bueno
+ *
+ */
 @Stateless
-public class ProdutoDaoImpl extends AbstractDao<Produto> {
+public class ProdutoDaoImpl extends AbstractDao<Produto>implements ProdutoDaoLocal {
 
-	@PersistenceContext
+	@PersistenceContext // Injetado
 	private EntityManager entityManager;
 
 	@Override
@@ -25,6 +33,11 @@ public class ProdutoDaoImpl extends AbstractDao<Produto> {
 		super(Produto.class);
 	}
 
+	/**
+	 * @see org.bueno.maribag.dao.impl.ProdutoDao#save(org.bueno.maribag.model.
+	 *      Produto)
+	 */
+	@Override
 	public void save(Produto produto) {
 		if (produto.getId() == null) {
 			insert(produto);
@@ -33,7 +46,11 @@ public class ProdutoDaoImpl extends AbstractDao<Produto> {
 		}
 	}
 
-	public Produto findProdutoByNome(String nomeProduto) {
+	/**
+	 * @see org.bueno.maribag.dao.impl.ProdutoDao#findProdutoByNome(java.lang.String)
+	 */
+	@Override
+	public Produto findProdutoByNome(String nomeProduto) throws DaoException {
 		try {
 			TypedQuery<Produto> query = getEntityManager().createQuery("Select o from Produto o where o.nome = :pNome",
 					Produto.class);

@@ -6,7 +6,7 @@ angular.module('mainApp', [ 'ui.router', 'ngResource', 'mainApp.controllers',
 
 angular.module('mainApp').config(function($stateProvider) {
 	$stateProvider.state('produtos', {
-		url : 'produtos',
+		url : '',
 		templateUrl : 'modules/produtos.html',
 		controller : 'ProdutoListController'
 

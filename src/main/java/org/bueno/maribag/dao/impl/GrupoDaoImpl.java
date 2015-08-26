@@ -1,4 +1,4 @@
-package org.bueno.maribag.data.impl;
+package org.bueno.maribag.dao.impl;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -7,13 +7,21 @@ import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import org.bueno.maribag.data.AbstractDao;
+import org.bueno.maribag.dao.GrupoDaoLocal;
+import org.bueno.maribag.dao.generic.AbstractDao;
+import org.bueno.maribag.exception.DaoException;
 import org.bueno.maribag.model.Grupo;
 
+/**
+ * EJB que implementa o DAO de Grupos
+ * 
+ * @author Bueno
+ *
+ */
 @Stateless
-public class GrupoDaoImpl extends AbstractDao<Grupo> {
+public class GrupoDaoImpl extends AbstractDao<Grupo>implements GrupoDaoLocal {
 
-	@PersistenceContext
+	@PersistenceContext // Injetado
 	private EntityManager entityManager;
 
 	@Override
@@ -25,6 +33,10 @@ public class GrupoDaoImpl extends AbstractDao<Grupo> {
 		super(Grupo.class);
 	}
 
+	/**
+	 * @see org.bueno.maribag.dao.impl.GrupoDao#save(org.bueno.maribag.model.Grupo)
+	 */
+	@Override
 	public void save(Grupo grupo) {
 		if (grupo.getId() == null) {
 			insert(grupo);
@@ -34,7 +46,11 @@ public class GrupoDaoImpl extends AbstractDao<Grupo> {
 		}
 	}
 
-	public Grupo findGrupoByNome(String nomeGrupo) {
+	/**
+	 * @see org.bueno.maribag.dao.impl.GrupoDao#findGrupoByNome(java.lang.String)
+	 */
+	@Override
+	public Grupo findGrupoByNome(String nomeGrupo) throws DaoException {
 		try {
 			TypedQuery<Grupo> query = getEntityManager().createQuery("Select o from Grupo o where o.nome = :pNome",
 					Grupo.class);

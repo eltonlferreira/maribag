@@ -1,31 +1,29 @@
 <meta charset="utf-8" />
 <a ui-sref="newProduto" class="btn-primary btn-lg nodecoration">Novo produto</a>
 <a ui-sref="newGrupo" class="btn-primary btn-lg nodecoration">Novo grupo</a>
-<table border="0" class="table produtotable" ng-repeat="grupo in grupos track by $index">
-	<tr >
-		<td colspan="4"><h4>{{grupo.nome}}</h4></td>
-		<td><h4>Total {{getTotal(grupo.id)}}</h4><td>
+<table border="0" class="table produtotable" ng-repeat="grupo in grupos track by $index" >
+	<tr>
+		<td colspan="5"><h4>{{grupo.nome}}</h4></td>
 	</tr>
 	<tr >
 		<td></td>
 		<td>Nome</td>
 		<td>Quantidade</td>
-		<td>Valor</td>	
-		<td></td>	
+		<td >Valor</td>	
+		<td ></td>
 	</tr>
-	<tr  ng-repeat="prod in produtos" ng-if="grupo.id == prod.grupo.id" >
-		<td><input type="checkbox" ng-model="prod.marcado"></td>
+	<tr ng-repeat="prod in produtos" ng-if="grupo.id == prod.grupo.id"  >
+		<td><input class="checkbox" type="checkbox" ng-model="prod.marcado" ng-change="markProduto(prod)"></td>
 		<td>{{prod.nome}}</td>
 		<td >{{prod.quantidade}}</td>
 		<td>{{prod.valor}}</td>
-		<td align="right">
-		
-			<button type="button" class="btn btn-default btn-lg" ng-click="markProduto(prod)">
-  				<span class="glyphicons glyphicons-pencil" aria-hidden="true">Teste</span>
-			</button>
-			<a class="btn btn-primary"	ng-click="markProduto(prod)">Marca</a> 
-			<a class="btn btn-primary"	ui-sref="viewProduto({id:prod.id})">Visualiza</a> 
-			<a class="btn btn-danger" ng-click="deleteProduto(prod)">Remove</a>
+		<td>
+			<a class="btn btn-primary btn-sm" ui-sref="viewProduto({id:prod.id})">Visualiza</a> 
+			<a class="btn btn-danger btn-sm" ng-click="deleteProduto(prod)">Remove</a>
 		</td>
+	</tr>
+	<tr >
+		<td colspan="2"><td>
+		<td >Total: {{getTotal(grupo.id)}}<td>
 	</tr>
 </table>
