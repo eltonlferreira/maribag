@@ -1,7 +1,8 @@
 /**
  * Controller API
  */
-angular.module('mainApp.controllers', []).controller('ProdutoListController',
+angular.module('mainApp.controllers', []).controller(
+		'ProdutoListController',
 		function($scope, $state, popupService, $window, Produto, Grupo) {
 
 			$scope.produtos = Produto.query();
@@ -12,7 +13,8 @@ angular.module('mainApp.controllers', []).controller('ProdutoListController',
 				for (var i = 0; i < $scope.produtos.length; i++) {
 					produto = $scope.produtos[i];
 					if (produto.grupo.id == idgrupo) {
-						total += produto.valor > 0 ? produto.valor : 0;
+						total += (produto.valor > 0 && angular
+								.isNumber(produto.valor)) ? produto.valor : 0;
 					}
 				}
 				return total;
